@@ -12,24 +12,30 @@ import axios from 'axios';
                 selMood: "",
                 outputMsg: ""
             }
+        },
+        methods: {
+            async addPost() {
+                try {
+                    await axios.get(`${this.baseUrl}/addPost`, { params: {
+                        'subject': this.subject,
+                        'entry': this.entry,
+                        'mood': this.selMood
+                    }})
+                } catch (error) {
+                    console.log(error)
+                }
+            }
+        },
+        computed: {
+            baseUrl() {
+                if (window.location.hostname=='localhost')
+                    return 'http://localhost:3000' 
+                else {
+                    const codespace_host = window.location.hostname.replace('5173', '3000')
+                    return `https://${codespace_host}`;
+                }
+            }
         }
-
-       computed: {
-
-       },
-       methods: {
-        addPost(){
-            //issue get request to addPost backend service
-            axios.get(`${this.baseUrl}/addPost`)
-            .then(response =>{
-                this.outputMsg = response.data.message
-            })
-            .catch(error =>{
-                this.posts = [{entry: "There was an error: " + error.message}]
-            })
-
-        }
-       }
 
     }
 </script>
